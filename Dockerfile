@@ -1,22 +1,7 @@
-# Docker image for the Drone Azure Storage plugin
-#
-#     cd $GOPATH/src/github.com/drone-plugins/drone-azure-storage
-#     make deps build docker
-
-FROM alpine:3.3
-
-RUN apk update && \
-  apk add \
-    ca-certificates \
-    python \
-    py-pip \
-    build-base \
-    python-dev \
-    libffi-dev \
-    openssl-dev && \
-  pip install --upgrade pip && \
-  pip install blobxfer && \
-  rm -rf /var/cache/apk/*
-
-ADD drone-azure-storage /bin/
-ENTRYPOINT ["/bin/drone-azure-storage"]
+FROM alpine:3.5
+RUN apk -Uuv add ca-certificates python py-pip build-base python-dev libffi-dev openssl-dev \
+  && pip install blobxfer \
+  && apk del build-base python-dev libffi-dev openssl-dev \
+  && rm -rf /var/cache/apk/*
+ADD drone-azure-storage /drone-azure-storage
+ENTRYPOINT ["/drone-azure-storage"]
